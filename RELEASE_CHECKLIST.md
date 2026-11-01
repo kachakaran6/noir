@@ -23,6 +23,7 @@
 - [x] **Actual screenshots included**: 5 real device screenshots saved in `docs/screenshots/`.
 - [x] **Changelog prepared**: `CHANGELOG.md` created following Keep a Changelog standard.
 - [x] **QA report prepared**: `QA_REPORT.md` created with granular test IDs and results.
-- [ ] **Git tag v0.1.0 created**: Pending git commit and tag command.
-- [ ] **GitHub Release created**: Pending execution of GitHub release automation.
-- [ ] **APK uploaded as release asset**: Pending execution of GitHub release upload.
+- [x] **Git tag v0.1.0 created**: Created tag `v0.1.0` pointing to commit `ea428c6`.
+- [x] **GitHub Release created**: Published `v0.1.0` to `https://github.com/kachakaran6/noir/releases/tag/v0.1.0`.
+- [x] **APK uploaded as release asset**: Uploaded `app-release.apk` (11.77 MB) & `app-release.apk.sha256`.
+- [x] **SHA256 checksum verified**: Verified matching `3727C4D0166DDEEB428C00CE7F4B82DF260184FF44B31C8B54F1F362895F6EFD`.
