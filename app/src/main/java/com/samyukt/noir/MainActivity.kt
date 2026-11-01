@@ -28,17 +28,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            // Back button navigation: Home launchers never finish the activity on home back press
-            BackHandler(enabled = true) {
+            val canNavigateBack = uiState.currentScreen != Screen.HOME ||
+                    uiState.selectedAppForMenu != null ||
+                    uiState.searchQuery.isNotEmpty()
+
+            // Back button navigation: enabled only when there is an active subscreen, search, or dialog.
+            // When at root home screen, BackHandler is disabled so native Android launcher gestures are preserved.
+            BackHandler(enabled = canNavigateBack) {
                 when {
                     uiState.selectedAppForMenu != null -> viewModel.selectAppForMenu(null)
                     uiState.searchQuery.isNotEmpty() -> viewModel.onSearchQueryChange("")
                     uiState.currentScreen == Screen.ICON_CUSTOMIZATION -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.HIDDEN_APPS -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.SETTINGS -> viewModel.navigateTo(Screen.HOME)
-                    uiState.currentScreen == Screen.HOME -> {
-                        // At root home screen: Consume back event, do nothing (keep launcher active)
-                    }
                 }
             }
 

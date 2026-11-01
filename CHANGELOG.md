@@ -5,6 +5,20 @@ All notable changes to the NOIR Launcher project will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-11-02
+
+### Added
+- **Predictive Back Navigation Support**: Enabled `android:enableOnBackInvokedCallback="true"` for modern Android 13/14+ predictive back gestures.
+- **Back Navigation Coordination**: Integrated scoped `BackHandler` logic across all screens (Settings, Icon Customization, Hidden Apps, search query, keyboard dismissal, and bottom sheet menus).
+- **Edge Back Gesture Discrimination**: Alphabet scrubber now detects horizontal inward edge swipes and gracefully yields to Android system left/right edge back gestures.
+- **GPU-Accelerated Scrubber Architecture**: Re-engineered vertical alphabet arc using `graphicsLayer` RenderNodes with instant touch-down activation and spring damping.
+
+### Changed
+- **Application List Polish**: Completely removed right-facing arrow indicators (`›`) and trailing spacer padding from every application row, allowing titles to utilize full horizontal width.
+- **Canonical NOIR 'N' Icon Branding**: Completely replaced legacy assets with the official editorial serif "N" tactile paper icon across all standard mipmap densities (`mdpi`, `hdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`), adaptive foreground, black background, and Material You monochrome layer.
+- **Application Display Name**: Standardized application label to `NOIR` in `strings.xml`.
+- **List Synchronization**: Eliminated coroutine backlog during rapid dragging by introducing coordinated single-job cancellation for list scrolling.
+
 ## [0.1.0] - 2026-11-02
 
 ### Added

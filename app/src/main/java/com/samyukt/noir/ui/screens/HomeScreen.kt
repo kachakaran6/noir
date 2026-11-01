@@ -1,5 +1,6 @@
 package com.samyukt.noir.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -34,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +53,7 @@ import com.samyukt.noir.ui.theme.EditorialSerif
 import com.samyukt.noir.ui.theme.GraphiteTheme
 import com.samyukt.noir.ui.theme.SwissSans
 import com.samyukt.noir.viewmodel.LauncherUiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,7 +72,21 @@ fun HomeScreen(
     val colors = GraphiteTheme.colors
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var scrollJob by remember { mutableStateOf<Job?>(null) }
     var dismissDefaultBanner by remember { mutableStateOf(false) }
+
+    // Intercept Back on HomeScreen only when Search or Context Menu is active to close them smoothly
+    BackHandler(enabled = uiState.searchQuery.isNotEmpty() || uiState.selectedAppForMenu != null) {
+        if (uiState.selectedAppForMenu != null) {
+            onSelectAppForMenu(null)
+        } else if (uiState.searchQuery.isNotEmpty()) {
+            onSearchQueryChange("")
+            focusManager.clearFocus()
+            keyboardController?.hide()
+        }
+    }
 
     val isAlphabetical = uiState.settings.sortOrder == SortOrder.ALPHABETICAL_ASC ||
             uiState.settings.sortOrder == SortOrder.ALPHABETICAL_DESC
@@ -285,7 +303,8 @@ fun HomeScreen(
                                             .minByOrNull { it.key }?.value
                                     }
                                 if (target != null) {
-                                    coroutineScope.launch {
+                                    scrollJob?.cancel()
+                                    scrollJob = coroutineScope.launch {
                                         if (isDragging) {
                                             listState.scrollToItem(target)
                                         } else {

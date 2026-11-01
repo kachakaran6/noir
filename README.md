@@ -129,12 +129,12 @@ The signed APK will be generated at `app/build/outputs/apk/release/app-release.a
 
 ---
 
-## Release Verification (v0.1.0)
+## Release Verification (v0.1.1)
 
 - **Application ID / Package**: `com.samyukt.noir`
-- **Application Name**: `Noir`
-- **Release Artifact**: `release/app-release.apk`
-- **SHA-256 Checksum**: `386C884FD572B85551AA189D2C5B5DED0685585BDE424E1943A457E4D9937370`
+- **Application Name**: `NOIR`
+- **Release Artifact**: `release/NOIR-v0.1.1.apk`
+- **SHA-256 Checksum**: `9856E0FE32318E1BA40FA2FAEE04786B267F0957179C71CF548CF9FCFAA6D470`
 - **Signature Scheme**: APK Signature Scheme v2 (Verified via Android SDK `apksigner`)
 - **Target OS**: Android 8.0 (API 26) through Android 15 (API 35)
 

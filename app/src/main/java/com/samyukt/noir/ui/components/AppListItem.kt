@@ -89,18 +89,6 @@ fun AppListItem(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
-
-        // Subtle right-side interaction marker
-        Text(
-            text = "›",
-            style = androidx.compose.ui.text.TextStyle(
-                fontFamily = SwissSans,
-                fontWeight = FontWeight.Light,
-                fontSize = 16.sp,
-                color = colors.mutedText.copy(alpha = 0.5f)
-            ),
-            modifier = Modifier.padding(start = 8.dp)
-        )
     }
 }
 
