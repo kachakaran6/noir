@@ -5,11 +5,13 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.graphite.paper.launcher.model.IconSize
-import com.graphite.paper.launcher.model.IconTint
+import com.graphite.paper.launcher.model.IconColorMode
+import com.graphite.paper.launcher.model.IconShape
 import com.graphite.paper.launcher.model.LauncherSettings
 import com.graphite.paper.launcher.model.SortOrder
 import com.graphite.paper.launcher.model.ThemeMode
@@ -25,12 +27,15 @@ class SettingsRepository(private val context: Context) {
         val SHOW_DATE = booleanPreferencesKey("show_date")
         val SHOW_CLOCK = booleanPreferencesKey("show_clock")
         val SHOW_ICONS = booleanPreferencesKey("show_icons")
-        val ICON_SIZE = stringPreferencesKey("icon_size")
-        val ICON_TINT = stringPreferencesKey("icon_tint")
+        val ICON_SHAPE = stringPreferencesKey("icon_shape")
+        val ICON_COLOR_MODE = stringPreferencesKey("icon_color_mode")
+        val CUSTOM_ICON_TINT = longPreferencesKey("custom_icon_tint")
+        val ICON_SIZE_DP = intPreferencesKey("icon_size_dp")
         val SORT_ORDER = stringPreferencesKey("sort_order")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val SUBTLE_PAPER_GRAIN = booleanPreferencesKey("subtle_paper_grain")
         val SHOW_SECTION_HEADERS = booleanPreferencesKey("show_section_headers")
+        val ALPHABET_INDEX_ENABLED = booleanPreferencesKey("alphabet_index_enabled")
         val HIDDEN_PACKAGES = stringSetPreferencesKey("hidden_packages")
     }
 
@@ -40,11 +45,14 @@ class SettingsRepository(private val context: Context) {
         val showClock = preferences[PreferencesKeys.SHOW_CLOCK] ?: true
         val showIcons = preferences[PreferencesKeys.SHOW_ICONS] ?: true
 
-        val iconSizeStr = preferences[PreferencesKeys.ICON_SIZE] ?: IconSize.MEDIUM.name
-        val iconSize = runCatching { IconSize.valueOf(iconSizeStr) }.getOrDefault(IconSize.MEDIUM)
+        val iconShapeStr = preferences[PreferencesKeys.ICON_SHAPE] ?: IconShape.ROUNDED_SQUARE.name
+        val iconShape = runCatching { IconShape.valueOf(iconShapeStr) }.getOrDefault(IconShape.ROUNDED_SQUARE)
 
-        val iconTintStr = preferences[PreferencesKeys.ICON_TINT] ?: IconTint.GRAPHITE_MONOCHROME.name
-        val iconTint = runCatching { IconTint.valueOf(iconTintStr) }.getOrDefault(IconTint.GRAPHITE_MONOCHROME)
+        val iconColorModeStr = preferences[PreferencesKeys.ICON_COLOR_MODE] ?: IconColorMode.THEME_MATCHED.name
+        val iconColorMode = runCatching { IconColorMode.valueOf(iconColorModeStr) }.getOrDefault(IconColorMode.THEME_MATCHED)
+
+        val customIconTint = preferences[PreferencesKeys.CUSTOM_ICON_TINT] ?: 0xFF252525L
+        val iconSizeDp = preferences[PreferencesKeys.ICON_SIZE_DP] ?: 36
 
         val sortOrderStr = preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.ALPHABETICAL_ASC.name
         val sortOrder = runCatching { SortOrder.valueOf(sortOrderStr) }.getOrDefault(SortOrder.ALPHABETICAL_ASC)
@@ -54,6 +62,7 @@ class SettingsRepository(private val context: Context) {
 
         val subtlePaperGrain = preferences[PreferencesKeys.SUBTLE_PAPER_GRAIN] ?: true
         val showSectionHeaders = preferences[PreferencesKeys.SHOW_SECTION_HEADERS] ?: true
+        val alphabetIndexEnabled = preferences[PreferencesKeys.ALPHABET_INDEX_ENABLED] ?: true
         val hiddenPackages = preferences[PreferencesKeys.HIDDEN_PACKAGES] ?: emptySet()
 
         LauncherSettings(
@@ -61,12 +70,15 @@ class SettingsRepository(private val context: Context) {
             showDate = showDate,
             showClock = showClock,
             showIcons = showIcons,
-            iconSize = iconSize,
-            iconTint = iconTint,
+            iconShape = iconShape,
+            iconColorMode = iconColorMode,
+            customIconTint = customIconTint,
+            iconSizeDp = iconSizeDp,
             sortOrder = sortOrder,
             themeMode = themeMode,
             subtlePaperGrain = subtlePaperGrain,
             showSectionHeaders = showSectionHeaders,
+            alphabetIndexEnabled = alphabetIndexEnabled,
             hiddenPackages = hiddenPackages
         )
     }
@@ -87,12 +99,20 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[PreferencesKeys.SHOW_ICONS] = enabled }
     }
 
-    suspend fun setIconSize(size: IconSize) {
-        context.dataStore.edit { it[PreferencesKeys.ICON_SIZE] = size.name }
+    suspend fun setIconShape(shape: IconShape) {
+        context.dataStore.edit { it[PreferencesKeys.ICON_SHAPE] = shape.name }
     }
 
-    suspend fun setIconTint(tint: IconTint) {
-        context.dataStore.edit { it[PreferencesKeys.ICON_TINT] = tint.name }
+    suspend fun setIconColorMode(mode: IconColorMode) {
+        context.dataStore.edit { it[PreferencesKeys.ICON_COLOR_MODE] = mode.name }
+    }
+
+    suspend fun setCustomIconTint(tint: Long) {
+        context.dataStore.edit { it[PreferencesKeys.CUSTOM_ICON_TINT] = tint }
+    }
+
+    suspend fun setIconSizeDp(sizeDp: Int) {
+        context.dataStore.edit { it[PreferencesKeys.ICON_SIZE_DP] = sizeDp }
     }
 
     suspend fun setSortOrder(order: SortOrder) {
@@ -109,6 +129,10 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setShowSectionHeaders(enabled: Boolean) {
         context.dataStore.edit { it[PreferencesKeys.SHOW_SECTION_HEADERS] = enabled }
+    }
+
+    suspend fun setAlphabetIndexEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.ALPHABET_INDEX_ENABLED] = enabled }
     }
 
     suspend fun hidePackage(packageName: String) {

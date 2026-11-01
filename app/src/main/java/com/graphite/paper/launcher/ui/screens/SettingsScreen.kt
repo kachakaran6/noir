@@ -20,7 +20,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RestartAlt
+import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,13 +33,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.graphite.paper.launcher.model.IconSize
-import com.graphite.paper.launcher.model.IconTint
-import com.graphite.paper.launcher.model.LauncherSettings
 import com.graphite.paper.launcher.model.SortOrder
 import com.graphite.paper.launcher.model.ThemeMode
 import com.graphite.paper.launcher.ui.components.PaperSurface
@@ -54,12 +52,13 @@ fun SettingsScreen(
     onToggleDate: (Boolean) -> Unit,
     onToggleClock: (Boolean) -> Unit,
     onToggleIcons: (Boolean) -> Unit,
-    onSetIconSize: (IconSize) -> Unit,
-    onSetIconTint: (IconTint) -> Unit,
+    onOpenIconCustomization: () -> Unit,
     onSetSortOrder: (SortOrder) -> Unit,
     onSetThemeMode: (ThemeMode) -> Unit,
     onToggleGrain: (Boolean) -> Unit,
     onToggleSectionHeaders: (Boolean) -> Unit,
+    onToggleAlphabetIndex: (Boolean) -> Unit,
+    onOpenUsageSettings: () -> Unit,
     onOpenHiddenApps: () -> Unit,
     onResetDefaults: () -> Unit,
     modifier: Modifier = Modifier
@@ -153,66 +152,10 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Section: Application List Appearance
-                SettingsSectionTitle("APPLICATION LIST")
+                // Section: Application Organization
+                SettingsSectionTitle("APPLICATION ORGANIZATION")
 
-                SettingsSwitchRow(
-                    title = "Display Application Icons",
-                    subtitle = "Toggle for pure text-only editorial minimalism",
-                    checked = uiState.settings.showIcons,
-                    onCheckedChange = onToggleIcons
-                )
-
-                if (uiState.settings.showIcons) {
-                    SettingsSubLabel("ICON COLOR PALETTE")
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        IconTint.values().forEach { tint ->
-                            SettingsChip(
-                                label = tint.displayName,
-                                selected = uiState.settings.iconTint == tint,
-                                onClick = { onSetIconTint(tint) },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    SettingsSubLabel("ICON SCALE")
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        IconSize.values().forEach { size ->
-                            SettingsChip(
-                                label = size.displayName,
-                                selected = uiState.settings.iconSize == size,
-                                onClick = { onSetIconSize(size) },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                SettingsSwitchRow(
-                    title = "Alphabetical Section Dividers",
-                    subtitle = "Hairline dividers for alphabetical groupings",
-                    checked = uiState.settings.showSectionHeaders,
-                    onCheckedChange = onToggleSectionHeaders
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                SettingsSubLabel("LIST SORTING")
+                SettingsSubLabel("SORT ORDER")
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -228,10 +171,122 @@ fun SettingsScreen(
                     }
                 }
 
+                if (uiState.settings.sortOrder == SortOrder.RECENTLY_USED && !uiState.hasUsageStatsAccess) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(3.dp))
+                            .background(colors.surface)
+                            .clickable(onClick = onOpenUsageSettings)
+                            .padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Security,
+                            contentDescription = null,
+                            tint = colors.secondaryText,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Usage Access Required",
+                                style = androidx.compose.ui.text.TextStyle(
+                                    fontFamily = SwissSans,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 12.sp,
+                                    color = colors.primaryText
+                                )
+                            )
+                            Text(
+                                text = "Tap here to grant Android usage permission for Recently Used tracking",
+                                style = androidx.compose.ui.text.TextStyle(
+                                    fontFamily = SwissSans,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 11.sp,
+                                    color = colors.mutedText
+                                )
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                SettingsSwitchRow(
+                    title = "Vertical Index Scroller (A–Z)",
+                    subtitle = "Touch & drag alphabetical navigation on right edge",
+                    checked = uiState.settings.alphabetIndexEnabled,
+                    onCheckedChange = onToggleAlphabetIndex
+                )
+
+                SettingsSwitchRow(
+                    title = "Alphabetical Section Dividers",
+                    subtitle = "Hairline dividers for alphabetical groupings",
+                    checked = uiState.settings.showSectionHeaders,
+                    onCheckedChange = onToggleSectionHeaders
+                )
+
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Section: Appearance & Texture
-                SettingsSectionTitle("APPEARANCE & TEXTURE")
+                // Section: Appearance & Icons
+                SettingsSectionTitle("APPEARANCE")
+
+                SettingsSwitchRow(
+                    title = "Display Application Icons",
+                    subtitle = "Toggle off for pure text-only editorial minimalism",
+                    checked = uiState.settings.showIcons,
+                    onCheckedChange = onToggleIcons
+                )
+
+                if (uiState.settings.showIcons) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = onOpenIconCustomization)
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Palette,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = colors.primaryText
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Application Icons",
+                                style = androidx.compose.ui.text.TextStyle(
+                                    fontFamily = SwissSans,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 14.sp,
+                                    color = colors.primaryText
+                                )
+                            )
+                            Text(
+                                text = "${uiState.settings.iconShape.displayName} • ${uiState.settings.iconColorMode.displayName} • ${uiState.settings.iconSizeDp}dp",
+                                style = androidx.compose.ui.text.TextStyle(
+                                    fontFamily = SwissSans,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 12.sp,
+                                    color = colors.mutedText
+                                )
+                            )
+                        }
+                        Text(
+                            text = "CUSTOMIZE ›",
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontFamily = SwissSans,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 11.sp,
+                                letterSpacing = 1.0.sp,
+                                color = colors.secondaryText
+                            )
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 SettingsSubLabel("THEME")
                 Row(

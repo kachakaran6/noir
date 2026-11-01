@@ -7,3 +7,4 @@ class LauncherApp : Application() {
         super.onCreate()
     }
 }
+

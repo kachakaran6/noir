@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.graphite.paper.launcher.ui.screens.HiddenAppsScreen
 import com.graphite.paper.launcher.ui.screens.HomeScreen
+import com.graphite.paper.launcher.ui.screens.IconCustomizationScreen
 import com.graphite.paper.launcher.ui.screens.SettingsScreen
 import com.graphite.paper.launcher.ui.theme.GraphitePaperTheme
 import com.graphite.paper.launcher.viewmodel.LauncherViewModel
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
             BackHandler(enabled = uiState.currentScreen != Screen.HOME || uiState.searchQuery.isNotEmpty() || uiState.selectedAppForMenu != null) {
                 when {
                     uiState.selectedAppForMenu != null -> viewModel.selectAppForMenu(null)
+                    uiState.currentScreen == Screen.ICON_CUSTOMIZATION -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.HIDDEN_APPS -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.SETTINGS -> viewModel.navigateTo(Screen.HOME)
                     uiState.searchQuery.isNotEmpty() -> viewModel.onSearchQueryChange("")
@@ -60,14 +62,25 @@ class MainActivity : ComponentActivity() {
                                 onToggleDate = viewModel::toggleDate,
                                 onToggleClock = viewModel::toggleClock,
                                 onToggleIcons = viewModel::toggleIcons,
-                                onSetIconSize = viewModel::setIconSize,
-                                onSetIconTint = viewModel::setIconTint,
+                                onOpenIconCustomization = { viewModel.navigateTo(Screen.ICON_CUSTOMIZATION) },
                                 onSetSortOrder = viewModel::setSortOrder,
                                 onSetThemeMode = viewModel::setThemeMode,
                                 onToggleGrain = viewModel::toggleGrain,
                                 onToggleSectionHeaders = viewModel::toggleSectionHeaders,
+                                onToggleAlphabetIndex = viewModel::toggleAlphabetIndex,
+                                onOpenUsageSettings = viewModel::openUsageAccessSettings,
                                 onOpenHiddenApps = { viewModel.navigateTo(Screen.HIDDEN_APPS) },
                                 onResetDefaults = viewModel::resetDefaults
+                            )
+                        }
+                        Screen.ICON_CUSTOMIZATION -> {
+                            IconCustomizationScreen(
+                                uiState = uiState,
+                                onBack = { viewModel.navigateTo(Screen.SETTINGS) },
+                                onSetIconShape = viewModel::setIconShape,
+                                onSetIconColorMode = viewModel::setIconColorMode,
+                                onSetCustomTint = viewModel::setCustomIconTint,
+                                onSetIconSizeDp = viewModel::setIconSizeDp
                             )
                         }
                         Screen.HIDDEN_APPS -> {

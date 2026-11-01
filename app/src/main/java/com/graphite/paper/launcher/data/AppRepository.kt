@@ -1,5 +1,7 @@
 package com.graphite.paper.launcher.data
 
+import android.app.AppOpsManager
+import android.app.usage.UsageStatsManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,7 +10,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -36,7 +37,6 @@ class AppRepository(private val context: Context) {
 
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(ctx: Context?, intent: Intent?) {
-                // When package added/removed/changed, reload
                 CoroutineScope(Dispatchers.IO).launch {
                     trySend(loadInstalledApps())
                 }
@@ -73,6 +73,7 @@ class AppRepository(private val context: Context) {
             packageManager.queryIntentActivities(launcherIntent, 0)
         }
 
+        val usageMap = getLastUsedMap()
         val myPackageName = context.packageName
 
         resolveInfos
@@ -92,15 +93,60 @@ class AppRepository(private val context: Context) {
                     packageManager.getPackageInfo(pkgName, 0).firstInstallTime
                 }.getOrDefault(0L)
 
+                val lastUsedTime = usageMap[pkgName] ?: 0L
+
                 AppInfo(
                     packageName = pkgName,
                     activityName = actName,
                     label = appLabel,
                     iconBitmap = iconBitmap,
-                    firstInstallTime = firstInstallTime
+                    firstInstallTime = firstInstallTime,
+                    lastUsedTime = lastUsedTime
                 )
             }
             .sortedBy { it.label.lowercase() }
+    }
+
+    private fun getLastUsedMap(): Map<String, Long> {
+        return try {
+            val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
+            val endTime = System.currentTimeMillis()
+            val startTime = endTime - 1000L * 60 * 60 * 24 * 30 // 30 days
+            val usageStatsList = usageStatsManager?.queryUsageStats(UsageStatsManager.INTERVAL_BEST, startTime, endTime)
+            usageStatsList?.associate { it.packageName to it.lastTimeUsed } ?: emptyMap()
+        } catch (e: Exception) {
+            emptyMap()
+        }
+    }
+
+    fun hasUsageStatsPermission(): Boolean {
+        val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as? AppOpsManager ?: return false
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOps.unsafeCheckOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            appOps.checkOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName
+            )
+        }
+        return mode == AppOpsManager.MODE_ALLOWED
+    }
+
+    fun openUsageAccessSettings() {
+        try {
+            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun drawableToBitmap(drawable: Drawable): Bitmap? {

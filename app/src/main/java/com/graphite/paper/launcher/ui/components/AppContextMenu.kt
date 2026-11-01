@@ -1,8 +1,6 @@
 package com.graphite.paper.launcher.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,9 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -24,16 +22,15 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.graphite.paper.launcher.model.AppInfo
+import com.graphite.paper.launcher.model.IconColorMode
+import com.graphite.paper.launcher.model.IconShape
 import com.graphite.paper.launcher.ui.theme.EditorialSerif
 import com.graphite.paper.launcher.ui.theme.GraphiteTheme
 import com.graphite.paper.launcher.ui.theme.SwissSans
@@ -42,6 +39,9 @@ import com.graphite.paper.launcher.ui.theme.SwissSans
 @Composable
 fun AppContextMenu(
     app: AppInfo?,
+    iconShape: IconShape,
+    iconColorMode: IconColorMode,
+    customTint: Long,
     onDismiss: () -> Unit,
     onLaunch: (AppInfo) -> Unit,
     onAppInfo: (AppInfo) -> Unit,
@@ -52,12 +52,6 @@ fun AppContextMenu(
 
     val colors = GraphiteTheme.colors
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    val grayscaleFilter = remember {
-        val matrix = ColorMatrix()
-        matrix.setToSaturation(0f)
-        ColorFilter.colorMatrix(matrix)
-    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -77,15 +71,15 @@ fun AppContextMenu(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (app.iconBitmap != null) {
-                    Image(
-                        bitmap = app.iconBitmap,
-                        contentDescription = app.label,
-                        modifier = Modifier.size(44.dp),
-                        colorFilter = grayscaleFilter
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                IconRenderer(
+                    iconBitmap = app.iconBitmap,
+                    label = app.label,
+                    iconSizeDp = 44,
+                    iconShape = iconShape,
+                    iconColorMode = iconColorMode,
+                    customTint = customTint
+                )
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
@@ -117,7 +111,7 @@ fun AppContextMenu(
             // Actions
             ContextMenuActionRow(
                 label = "Launch Application",
-                icon = Icons.Outlined.OpenInNew,
+                icon = Icons.AutoMirrored.Outlined.OpenInNew,
                 onClick = {
                     onDismiss()
                     onLaunch(app)

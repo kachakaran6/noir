@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.graphite.paper.launcher.data.AppRepository
 import com.graphite.paper.launcher.data.SettingsRepository
 import com.graphite.paper.launcher.model.AppInfo
-import com.graphite.paper.launcher.model.IconSize
-import com.graphite.paper.launcher.model.IconTint
+import com.graphite.paper.launcher.model.IconColorMode
+import com.graphite.paper.launcher.model.IconShape
 import com.graphite.paper.launcher.model.LauncherSettings
 import com.graphite.paper.launcher.model.SortOrder
 import com.graphite.paper.launcher.model.ThemeMode
@@ -21,17 +21,21 @@ import kotlinx.coroutines.launch
 enum class Screen {
     HOME,
     SETTINGS,
+    ICON_CUSTOMIZATION,
     HIDDEN_APPS
 }
 
 data class LauncherUiState(
     val apps: List<AppInfo> = emptyList(),
     val totalInstalledCount: Int = 0,
+    val previewApps: List<AppInfo> = emptyList(),
+    val availableLetters: Set<String> = emptySet(),
     val hiddenApps: List<AppInfo> = emptyList(),
     val settings: LauncherSettings = LauncherSettings(),
     val searchQuery: String = "",
     val currentScreen: Screen = Screen.HOME,
     val selectedAppForMenu: AppInfo? = null,
+    val hasUsageStatsAccess: Boolean = false,
     val isLoading: Boolean = true
 )
 
@@ -73,21 +77,39 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
             SortOrder.ALPHABETICAL_ASC -> searchedApps.sortedBy { it.label.lowercase() }
             SortOrder.ALPHABETICAL_DESC -> searchedApps.sortedByDescending { it.label.lowercase() }
             SortOrder.RECENTLY_INSTALLED -> searchedApps.sortedByDescending { it.firstInstallTime }
+            SortOrder.RECENTLY_USED -> searchedApps.sortedWith(
+                compareByDescending<AppInfo> { it.lastUsedTime }
+                    .thenByDescending { it.firstInstallTime }
+            )
         }
+
+        // Compute available letters for alphabetical index
+        val availableLetters = sortedApps.map { app ->
+            val first = app.label.firstOrNull()?.uppercaseChar() ?: '#'
+            if (first in 'A'..'Z') first.toString() else "#"
+        }.toSet()
+
+        // Preview apps (first 4 items for live icon previews)
+        val previewApps = rawApps.take(4)
 
         // Hidden apps list for management
         val hiddenAppsList = rawApps.filter { app ->
             settings.hiddenPackages.contains(app.packageName)
         }
 
+        val hasUsageAccess = appRepository.hasUsageStatsPermission()
+
         LauncherUiState(
             apps = sortedApps,
             totalInstalledCount = rawApps.size,
+            previewApps = previewApps,
+            availableLetters = availableLetters,
             hiddenApps = hiddenAppsList,
             settings = settings,
             searchQuery = query,
             currentScreen = screen,
             selectedAppForMenu = menuApp,
+            hasUsageStatsAccess = hasUsageAccess,
             isLoading = false
         )
     }.stateIn(
@@ -148,12 +170,20 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch { settingsRepository.setShowIcons(enabled) }
     }
 
-    fun setIconSize(size: IconSize) {
-        viewModelScope.launch { settingsRepository.setIconSize(size) }
+    fun setIconShape(shape: IconShape) {
+        viewModelScope.launch { settingsRepository.setIconShape(shape) }
     }
 
-    fun setIconTint(tint: IconTint) {
-        viewModelScope.launch { settingsRepository.setIconTint(tint) }
+    fun setIconColorMode(mode: IconColorMode) {
+        viewModelScope.launch { settingsRepository.setIconColorMode(mode) }
+    }
+
+    fun setCustomIconTint(tint: Long) {
+        viewModelScope.launch { settingsRepository.setCustomIconTint(tint) }
+    }
+
+    fun setIconSizeDp(sizeDp: Int) {
+        viewModelScope.launch { settingsRepository.setIconSizeDp(sizeDp) }
     }
 
     fun setSortOrder(order: SortOrder) {
@@ -170,6 +200,14 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
 
     fun toggleSectionHeaders(enabled: Boolean) {
         viewModelScope.launch { settingsRepository.setShowSectionHeaders(enabled) }
+    }
+
+    fun toggleAlphabetIndex(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setAlphabetIndexEnabled(enabled) }
+    }
+
+    fun openUsageAccessSettings() {
+        appRepository.openUsageAccessSettings()
     }
 
     fun resetDefaults() {

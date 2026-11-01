@@ -1,6 +1,5 @@
 package com.graphite.paper.launcher.model
 
-import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.ImageBitmap
 
 data class AppInfo(
@@ -10,5 +9,6 @@ data class AppInfo(
     val iconBitmap: ImageBitmap? = null,
     val isPinned: Boolean = false,
     val isHidden: Boolean = false,
-    val firstInstallTime: Long = 0L
+    val firstInstallTime: Long = 0L,
+    val lastUsedTime: Long = 0L
 )
