@@ -1,0 +1,55 @@
+com.graphite.paper.launcher.app-animation-release-0 C:\Users\karan\.gradle\caches\8.11.1\transforms\023211da394ad390689174caed607796\transformed\animation-release\res
+com.graphite.paper.launcher.app-activity-ktx-1.9.3-1 C:\Users\karan\.gradle\caches\8.11.1\transforms\03cd7b143002c99d6c3886b9dc6b1e75\transformed\activity-ktx-1.9.3\res
+com.graphite.paper.launcher.app-lifecycle-viewmodel-compose-release-2 C:\Users\karan\.gradle\caches\8.11.1\transforms\11876298ec7583dcaf5b1c25cc8342c9\transformed\lifecycle-viewmodel-compose-release\res
+com.graphite.paper.launcher.app-ui-unit-release-3 C:\Users\karan\.gradle\caches\8.11.1\transforms\140cfa2278c0a3121058401af0acf0b1\transformed\ui-unit-release\res
+com.graphite.paper.launcher.app-annotation-experimental-1.4.1-4 C:\Users\karan\.gradle\caches\8.11.1\transforms\152b49a3b36a8f4dd9a840fcb95c957a\transformed\annotation-experimental-1.4.1\res
+com.graphite.paper.launcher.app-tracing-1.2.0-5 C:\Users\karan\.gradle\caches\8.11.1\transforms\190d32aba127d6ad1365845d1a4267f1\transformed\tracing-1.2.0\res
+com.graphite.paper.launcher.app-material3-release-6 C:\Users\karan\.gradle\caches\8.11.1\transforms\20771f87dc88c55b2c934345a151c781\transformed\material3-release\res
+com.graphite.paper.launcher.app-lifecycle-viewmodel-ktx-2.8.7-7 C:\Users\karan\.gradle\caches\8.11.1\transforms\213178e0a276c988e7e1ac8877572b3a\transformed\lifecycle-viewmodel-ktx-2.8.7\res
+com.graphite.paper.launcher.app-ui-graphics-release-8 C:\Users\karan\.gradle\caches\8.11.1\transforms\2202b9cc786d7c9e214a75366ebf1d0a\transformed\ui-graphics-release\res
+com.graphite.paper.launcher.app-runtime-saveable-release-9 C:\Users\karan\.gradle\caches\8.11.1\transforms\23877bf3794707653d8fecc36e314ddd\transformed\runtime-saveable-release\res
+com.graphite.paper.launcher.app-runtime-release-10 C:\Users\karan\.gradle\caches\8.11.1\transforms\25768502d2921d9f82eacae68c7c0633\transformed\runtime-release\res
+com.graphite.paper.launcher.app-datastore-core-release-11 C:\Users\karan\.gradle\caches\8.11.1\transforms\26afe446c5b02f3fd109d2af9203458b\transformed\datastore-core-release\res
+com.graphite.paper.launcher.app-material-release-12 C:\Users\karan\.gradle\caches\8.11.1\transforms\304a0b00850bfc9abdc5a77a173ab2c0\transformed\material-release\res
+com.graphite.paper.launcher.app-ui-util-release-13 C:\Users\karan\.gradle\caches\8.11.1\transforms\331ce79b8cd097864c5f1176b547a42b\transformed\ui-util-release\res
+com.graphite.paper.launcher.app-lifecycle-runtime-release-14 C:\Users\karan\.gradle\caches\8.11.1\transforms\35a8ef7ec99bc104df3904191a06c20e\transformed\lifecycle-runtime-release\res
+com.graphite.paper.launcher.app-lifecycle-viewmodel-release-15 C:\Users\karan\.gradle\caches\8.11.1\transforms\473999b8cf57ede8c2975fa990e19014\transformed\lifecycle-viewmodel-release\res
+com.graphite.paper.launcher.app-savedstate-ktx-1.2.1-16 C:\Users\karan\.gradle\caches\8.11.1\transforms\48f17f520f50d270700f56ac297e866f\transformed\savedstate-ktx-1.2.1\res
+com.graphite.paper.launcher.app-foundation-release-17 C:\Users\karan\.gradle\caches\8.11.1\transforms\4c016d58beec81985f27cda37d8563e5\transformed\foundation-release\res
+com.graphite.paper.launcher.app-lifecycle-process-2.8.7-18 C:\Users\karan\.gradle\caches\8.11.1\transforms\509cf653a141737ec7499acc16ea61fb\transformed\lifecycle-process-2.8.7\res
+com.graphite.paper.launcher.app-profileinstaller-1.3.1-19 C:\Users\karan\.gradle\caches\8.11.1\transforms\50cfac3c830c49d1bd312cc459533ae6\transformed\profileinstaller-1.3.1\res
+com.graphite.paper.launcher.app-datastore-release-20 C:\Users\karan\.gradle\caches\8.11.1\transforms\50fb3eec7f99dc09d3443cb598971051\transformed\datastore-release\res
+com.graphite.paper.launcher.app-emoji2-1.3.0-21 C:\Users\karan\.gradle\caches\8.11.1\transforms\5101abb3dd2660ce8334279c08fdc665\transformed\emoji2-1.3.0\res
+com.graphite.paper.launcher.app-activity-1.9.3-22 C:\Users\karan\.gradle\caches\8.11.1\transforms\5aa70a0d9da36fe2cf0b94858ea7213d\transformed\activity-1.9.3\res
+com.graphite.paper.launcher.app-animation-core-release-23 C:\Users\karan\.gradle\caches\8.11.1\transforms\669bbe54fa4ace5eb3b1bf363d656760\transformed\animation-core-release\res
+com.graphite.paper.launcher.app-ui-geometry-release-24 C:\Users\karan\.gradle\caches\8.11.1\transforms\6746d2de904e560f957afcfc1dfdaed9\transformed\ui-geometry-release\res
+com.graphite.paper.launcher.app-foundation-layout-release-25 C:\Users\karan\.gradle\caches\8.11.1\transforms\71304dbe301287e53154614030a864a6\transformed\foundation-layout-release\res
+com.graphite.paper.launcher.app-lifecycle-runtime-compose-release-26 C:\Users\karan\.gradle\caches\8.11.1\transforms\715c5803fcf4ab246dc17fe06218e32d\transformed\lifecycle-runtime-compose-release\res
+com.graphite.paper.launcher.app-ui-test-manifest-1.7.5-27 C:\Users\karan\.gradle\caches\8.11.1\transforms\7388928b55baf4c32ae4bf74eeb83dea\transformed\ui-test-manifest-1.7.5\res
+com.graphite.paper.launcher.app-lifecycle-runtime-ktx-release-28 C:\Users\karan\.gradle\caches\8.11.1\transforms\7d2254bd8e60e6d9c3c4f72119b2eb9b\transformed\lifecycle-runtime-ktx-release\res
+com.graphite.paper.launcher.app-startup-runtime-1.1.1-29 C:\Users\karan\.gradle\caches\8.11.1\transforms\7d2b3b8d2b1569534f91ee8180298bd2\transformed\startup-runtime-1.1.1\res
+com.graphite.paper.launcher.app-customview-poolingcontainer-1.0.0-30 C:\Users\karan\.gradle\caches\8.11.1\transforms\81947ba1fddc1c3b2a4640e8c23c10f4\transformed\customview-poolingcontainer-1.0.0\res
+com.graphite.paper.launcher.app-lifecycle-viewmodel-savedstate-2.8.7-31 C:\Users\karan\.gradle\caches\8.11.1\transforms\85f8c49eecf4f1c670b9521381b41bef\transformed\lifecycle-viewmodel-savedstate-2.8.7\res
+com.graphite.paper.launcher.app-ui-tooling-release-32 C:\Users\karan\.gradle\caches\8.11.1\transforms\907fa5bd9469ec0e7af5a5f86a1ff289\transformed\ui-tooling-release\res
+com.graphite.paper.launcher.app-ui-tooling-data-release-33 C:\Users\karan\.gradle\caches\8.11.1\transforms\956eccdf2c73d33f1ca695926cdb5c27\transformed\ui-tooling-data-release\res
+com.graphite.paper.launcher.app-datastore-preferences-release-34 C:\Users\karan\.gradle\caches\8.11.1\transforms\9a918e99221a96c977c6b8a5a01273d8\transformed\datastore-preferences-release\res
+com.graphite.paper.launcher.app-lifecycle-livedata-core-2.8.7-35 C:\Users\karan\.gradle\caches\8.11.1\transforms\9cac0c8e2e11f0a8496cc70be37bd682\transformed\lifecycle-livedata-core-2.8.7\res
+com.graphite.paper.launcher.app-ui-tooling-preview-release-36 C:\Users\karan\.gradle\caches\8.11.1\transforms\9eaa2d176bfae1e9da947dd3810028d6\transformed\ui-tooling-preview-release\res
+com.graphite.paper.launcher.app-graphics-path-1.0.1-37 C:\Users\karan\.gradle\caches\8.11.1\transforms\a447a2b60be4d04d23ce6eec656e7c09\transformed\graphics-path-1.0.1\res
+com.graphite.paper.launcher.app-core-1.15.0-38 C:\Users\karan\.gradle\caches\8.11.1\transforms\a939e1fd71d44764616256dd34ad0cbf\transformed\core-1.15.0\res
+com.graphite.paper.launcher.app-savedstate-1.2.1-39 C:\Users\karan\.gradle\caches\8.11.1\transforms\c710a9d3a9f75b84f25e962f7a9108d3\transformed\savedstate-1.2.1\res
+com.graphite.paper.launcher.app-core-ktx-1.15.0-40 C:\Users\karan\.gradle\caches\8.11.1\transforms\cb6d31077986252faec799f3a867e29a\transformed\core-ktx-1.15.0\res
+com.graphite.paper.launcher.app-core-runtime-2.2.0-41 C:\Users\karan\.gradle\caches\8.11.1\transforms\d3f3a56a06331b2169515c58e1a584f3\transformed\core-runtime-2.2.0\res
+com.graphite.paper.launcher.app-material-ripple-release-42 C:\Users\karan\.gradle\caches\8.11.1\transforms\d970dd78e861c0ca1cc70092d0f23baa\transformed\material-ripple-release\res
+com.graphite.paper.launcher.app-material-icons-core-release-43 C:\Users\karan\.gradle\caches\8.11.1\transforms\e483b8da86e498733464a24ec8903965\transformed\material-icons-core-release\res
+com.graphite.paper.launcher.app-activity-compose-1.9.3-44 C:\Users\karan\.gradle\caches\8.11.1\transforms\e528bf77877fc327c7a98cfe8cdd4dea\transformed\activity-compose-1.9.3\res
+com.graphite.paper.launcher.app-ui-text-release-45 C:\Users\karan\.gradle\caches\8.11.1\transforms\e9dc32497681eadd20b5c6012cbc0a8c\transformed\ui-text-release\res
+com.graphite.paper.launcher.app-ui-release-46 C:\Users\karan\.gradle\caches\8.11.1\transforms\eda9f251a3e211b9a03019ee36c60a52\transformed\ui-release\res
+com.graphite.paper.launcher.app-material-icons-extended-release-47 C:\Users\karan\.gradle\caches\8.11.1\transforms\fb5acbce9e1ef11fc484b153265a0954\transformed\material-icons-extended-release\res
+com.graphite.paper.launcher.app-pngs-48 D:\android ui launcher\app\build\generated\res\pngs\debug
+com.graphite.paper.launcher.app-resValues-49 D:\android ui launcher\app\build\generated\res\resValues\debug
+com.graphite.paper.launcher.app-packageDebugResources-50 D:\android ui launcher\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.graphite.paper.launcher.app-packageDebugResources-51 D:\android ui launcher\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.graphite.paper.launcher.app-debug-52 D:\android ui launcher\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.graphite.paper.launcher.app-debug-53 D:\android ui launcher\app\src\debug\res
+com.graphite.paper.launcher.app-main-54 D:\android ui launcher\app\src\main\res

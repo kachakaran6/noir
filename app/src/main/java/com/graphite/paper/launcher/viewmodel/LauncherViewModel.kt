@@ -1,0 +1,178 @@
+package com.graphite.paper.launcher.viewmodel
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.graphite.paper.launcher.data.AppRepository
+import com.graphite.paper.launcher.data.SettingsRepository
+import com.graphite.paper.launcher.model.AppInfo
+import com.graphite.paper.launcher.model.IconSize
+import com.graphite.paper.launcher.model.IconTint
+import com.graphite.paper.launcher.model.LauncherSettings
+import com.graphite.paper.launcher.model.SortOrder
+import com.graphite.paper.launcher.model.ThemeMode
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+enum class Screen {
+    HOME,
+    SETTINGS,
+    HIDDEN_APPS
+}
+
+data class LauncherUiState(
+    val apps: List<AppInfo> = emptyList(),
+    val totalInstalledCount: Int = 0,
+    val hiddenApps: List<AppInfo> = emptyList(),
+    val settings: LauncherSettings = LauncherSettings(),
+    val searchQuery: String = "",
+    val currentScreen: Screen = Screen.HOME,
+    val selectedAppForMenu: AppInfo? = null,
+    val isLoading: Boolean = true
+)
+
+class LauncherViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val appRepository = AppRepository(application)
+    private val settingsRepository = SettingsRepository(application)
+
+    private val searchQuery = MutableStateFlow("")
+    private val currentScreen = MutableStateFlow(Screen.HOME)
+    private val selectedAppForMenu = MutableStateFlow<AppInfo?>(null)
+
+    val uiState: StateFlow<LauncherUiState> = combine(
+        appRepository.getInstalledAppsFlow(),
+        settingsRepository.settingsFlow,
+        searchQuery,
+        currentScreen,
+        selectedAppForMenu
+    ) { rawApps, settings, query, screen, menuApp ->
+        val trimmedQuery = query.trim().lowercase()
+
+        // Filter out hidden packages for the main list
+        val visibleApps = rawApps.filter { app ->
+            !settings.hiddenPackages.contains(app.packageName)
+        }
+
+        // Apply search query
+        val searchedApps = if (trimmedQuery.isEmpty()) {
+            visibleApps
+        } else {
+            visibleApps.filter { app ->
+                app.label.lowercase().contains(trimmedQuery) ||
+                        app.packageName.lowercase().contains(trimmedQuery)
+            }
+        }
+
+        // Apply sorting
+        val sortedApps = when (settings.sortOrder) {
+            SortOrder.ALPHABETICAL_ASC -> searchedApps.sortedBy { it.label.lowercase() }
+            SortOrder.ALPHABETICAL_DESC -> searchedApps.sortedByDescending { it.label.lowercase() }
+            SortOrder.RECENTLY_INSTALLED -> searchedApps.sortedByDescending { it.firstInstallTime }
+        }
+
+        // Hidden apps list for management
+        val hiddenAppsList = rawApps.filter { app ->
+            settings.hiddenPackages.contains(app.packageName)
+        }
+
+        LauncherUiState(
+            apps = sortedApps,
+            totalInstalledCount = rawApps.size,
+            hiddenApps = hiddenAppsList,
+            settings = settings,
+            searchQuery = query,
+            currentScreen = screen,
+            selectedAppForMenu = menuApp,
+            isLoading = false
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = LauncherUiState()
+    )
+
+    fun onSearchQueryChange(newQuery: String) {
+        searchQuery.value = newQuery
+    }
+
+    fun navigateTo(screen: Screen) {
+        currentScreen.value = screen
+    }
+
+    fun selectAppForMenu(app: AppInfo?) {
+        selectedAppForMenu.value = app
+    }
+
+    fun launchApp(app: AppInfo) {
+        appRepository.launchApp(app.packageName)
+    }
+
+    fun openAppDetails(app: AppInfo) {
+        appRepository.openAppDetails(app.packageName)
+    }
+
+    fun uninstallApp(app: AppInfo) {
+        appRepository.uninstallApp(app.packageName)
+    }
+
+    fun hideApp(app: AppInfo) {
+        viewModelScope.launch {
+            settingsRepository.hidePackage(app.packageName)
+        }
+    }
+
+    fun unhideApp(packageName: String) {
+        viewModelScope.launch {
+            settingsRepository.unhidePackage(packageName)
+        }
+    }
+
+    fun toggleSearchBar(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setShowSearchBar(enabled) }
+    }
+
+    fun toggleDate(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setShowDate(enabled) }
+    }
+
+    fun toggleClock(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setShowClock(enabled) }
+    }
+
+    fun toggleIcons(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setShowIcons(enabled) }
+    }
+
+    fun setIconSize(size: IconSize) {
+        viewModelScope.launch { settingsRepository.setIconSize(size) }
+    }
+
+    fun setIconTint(tint: IconTint) {
+        viewModelScope.launch { settingsRepository.setIconTint(tint) }
+    }
+
+    fun setSortOrder(order: SortOrder) {
+        viewModelScope.launch { settingsRepository.setSortOrder(order) }
+    }
+
+    fun setThemeMode(mode: ThemeMode) {
+        viewModelScope.launch { settingsRepository.setThemeMode(mode) }
+    }
+
+    fun toggleGrain(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setSubtlePaperGrain(enabled) }
+    }
+
+    fun toggleSectionHeaders(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.setShowSectionHeaders(enabled) }
+    }
+
+    fun resetDefaults() {
+        viewModelScope.launch { settingsRepository.resetDefaults() }
+    }
+}
