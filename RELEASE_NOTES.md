@@ -38,10 +38,12 @@ NOIR is an exceptionally clean, editorial Android home launcher inspired by Swis
 
 ### Release Verification & Checksums
 
+- **Package Name**: `com.samyukt.noir`
+- **Application Name**: `Noir`
 - **Artifact**: `app-release.apk`
 - **Version Name**: `0.1.0`
 - **Version Code**: `1`
-- **File Size**: `11,768,011 bytes` (`11.77 MB`)
-- **SHA-256**: `3727C4D0166DDEEB428C00CE7F4B82DF260184FF44B31C8B54F1F362895F6EFD`
+- **SHA-256**: `A9F0DD549BD0300127F5650D4FC4C785B7191294DF5ED9350C997A63E1124336`
 - **Signing Scheme**: APK Signature Scheme v2 (Verified via Android SDK `apksigner`)
 - **Target OS**: Android 8.0 (API 26) through Android 15 (API 35)
+

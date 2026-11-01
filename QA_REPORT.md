@@ -1,5 +1,7 @@
 # QA Test Report — NOIR Launcher v0.1.0
 
+**Package Name**: `com.samyukt.noir`  
+**Application Name**: `Noir`  
 **Test Date**: 2026-11-02  
 **Test Environment**: Physical Android Device `3086027538000H5` (Android 13 / API 33)  
 **Build Variant**: `release` (signed with APK Signature Scheme v2)  
@@ -73,3 +75,4 @@
 | BUILD-03 | Lint vital release check (`lintVitalRelease`) | **PASS** |
 | SIGN-01 | APK signature verification (`apksigner`) | **PASS** (v2 Scheme verified) |
 | RUN-01 | Physical device install & execution (`3086027538000H5`) | **PASS** |
+

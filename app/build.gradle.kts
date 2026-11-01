@@ -14,11 +14,11 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.graphite.paper.launcher"
+    namespace = "com.samyukt.noir"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.graphite.paper.launcher"
+        applicationId = "com.samyukt.noir"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

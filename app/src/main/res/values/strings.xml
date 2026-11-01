@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Graphite Paper</string>
+    <string name="app_name">Noir</string>
     <string name="search_placeholder">Search applications…</string>
     <string name="no_apps_found">No matching applications</string>
     <string name="title_applications">INDEX</string>

@@ -23,3 +23,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **App Privacy Vault**: Long-press context menu to inspect, uninstall, or hide apps, with dedicated Hidden Apps management screen.
 - **Automated Test Suite**: Full unit tests covering search filtering, sorting algorithms, alphabet extraction, and icon shape configurations (`LauncherCoreLogicTest.kt`).
 - **Production Release Signing**: Automated release signing using APK Signature Scheme v2.
+
