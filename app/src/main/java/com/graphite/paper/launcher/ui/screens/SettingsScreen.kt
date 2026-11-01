@@ -20,6 +20,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.Security
@@ -48,6 +50,7 @@ import com.graphite.paper.launcher.viewmodel.LauncherUiState
 fun SettingsScreen(
     uiState: LauncherUiState,
     onBack: () -> Unit,
+    onSetDefaultLauncher: () -> Unit,
     onToggleSearchBar: (Boolean) -> Unit,
     onToggleDate: (Boolean) -> Unit,
     onToggleClock: (Boolean) -> Unit,
@@ -126,6 +129,71 @@ fun SettingsScreen(
                     .verticalScroll(scrollState)
                     .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
+                // Section: Default Launcher
+                SettingsSectionTitle("DEFAULT LAUNCHER")
+
+                val isDefaultLauncher = uiState.defaultLauncherStatus.isDefault
+                val currentLauncherLabel = uiState.defaultLauncherStatus.currentDefaultLabel ?: "Another launcher"
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(3.dp))
+                        .background(colors.surface)
+                        .clickable(onClick = onSetDefaultLauncher)
+                        .padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = if (isDefaultLauncher) Icons.Outlined.CheckCircle else Icons.Outlined.Home,
+                        contentDescription = null,
+                        tint = if (isDefaultLauncher) colors.primaryText else colors.secondaryText,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = if (isDefaultLauncher) "Active Default Launcher" else "Set as Default Launcher",
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontFamily = SwissSans,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 13.sp,
+                                color = colors.primaryText
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = if (isDefaultLauncher) {
+                                "Graphite Paper is currently your primary Android home application."
+                            } else {
+                                "Currently active: $currentLauncherLabel. Tap to select Graphite Paper as default."
+                            },
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontFamily = SwissSans,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 11.sp,
+                                color = colors.mutedText,
+                                lineHeight = 15.sp
+                            )
+                        )
+                    }
+                    if (!isDefaultLauncher) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "CHANGE ›",
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontFamily = SwissSans,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 11.sp,
+                                letterSpacing = 1.0.sp,
+                                color = colors.secondaryText
+                            )
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
                 // Section: Home Screen Header
                 SettingsSectionTitle("HOME SCREEN HEADER")
 

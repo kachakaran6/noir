@@ -1,0 +1,28 @@
+# Release Checklist — NOIR Launcher v0.1.0
+
+- [x] **Repository inspected**: Inspected complete structure, git history, and origins.
+- [x] **Existing source changes preserved**: All user files and approved features preserved.
+- [x] **Android HOME intent filters verified**: `CATEGORY_HOME` and `CATEGORY_DEFAULT` present in `AndroidManifest.xml`.
+- [x] **NOIR recognized as a valid launcher**: Confirmed by Android OS `PackageManager`.
+- [x] **Default launcher selection flow tested**: System role request and in-app settings verified.
+- [x] **Home button functionality tested**: Pressing Home key returns to NOIR; Back key at home root does not exit.
+- [x] **Application discovery tested**: Live querying of all installed launchable activities (138 packages discovered).
+- [x] **Search tested**: Real-time case-insensitive filtering verified.
+- [x] **Alphabetical navigation tested**: Curved Gaussian deflection and smooth index navigation verified on device.
+- [x] **Icon customization tested**: 5 shapes, 3 color modes, and size slider verified.
+- [x] **Theme switching tested**: Paper light and Charcoal dark modes verified.
+- [x] **Preference persistence tested**: DataStore storage verified across activity recreation.
+- [x] **No known release-blocking crashes**: Zero ANRs or crashes during exhaustive physical device tests.
+- [x] **Gradle release build successful**: `assembleRelease` succeeded in 3m 6s.
+- [x] **Release APK generated**: `release/app-release.apk` (11,768,011 bytes).
+- [x] **APK signature verified**: Verified with `apksigner` using APK Signature Scheme v2.
+- [x] **APK installed and launched successfully**: Installed and executed on connected physical device `3086027538000H5`.
+- [x] **Version name 0.1.0 configured**: `versionName = "0.1.0"` in `app/build.gradle.kts`.
+- [x] **Version code 1 configured**: `versionCode = 1` in `app/build.gradle.kts`.
+- [x] **README professionally updated**: Created comprehensive `README.md` with badges, gallery, features, and setup.
+- [x] **Actual screenshots included**: 5 real device screenshots saved in `docs/screenshots/`.
+- [x] **Changelog prepared**: `CHANGELOG.md` created following Keep a Changelog standard.
+- [x] **QA report prepared**: `QA_REPORT.md` created with granular test IDs and results.
+- [ ] **Git tag v0.1.0 created**: Pending git commit and tag command.
+- [ ] **GitHub Release created**: Pending execution of GitHub release automation.
+- [ ] **APK uploaded as release asset**: Pending execution of GitHub release upload.

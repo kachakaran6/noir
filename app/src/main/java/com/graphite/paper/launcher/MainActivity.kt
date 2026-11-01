@@ -28,14 +28,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            // Back button navigation
-            BackHandler(enabled = uiState.currentScreen != Screen.HOME || uiState.searchQuery.isNotEmpty() || uiState.selectedAppForMenu != null) {
+            // Back button navigation: Home launchers never finish the activity on home back press
+            BackHandler(enabled = true) {
                 when {
                     uiState.selectedAppForMenu != null -> viewModel.selectAppForMenu(null)
+                    uiState.searchQuery.isNotEmpty() -> viewModel.onSearchQueryChange("")
                     uiState.currentScreen == Screen.ICON_CUSTOMIZATION -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.HIDDEN_APPS -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.SETTINGS -> viewModel.navigateTo(Screen.HOME)
-                    uiState.searchQuery.isNotEmpty() -> viewModel.onSearchQueryChange("")
+                    uiState.currentScreen == Screen.HOME -> {
+                        // At root home screen: Consume back event, do nothing (keep launcher active)
+                    }
                 }
             }
 
@@ -51,13 +54,15 @@ class MainActivity : ComponentActivity() {
                                 onSelectAppForMenu = viewModel::selectAppForMenu,
                                 onAppInfo = viewModel::openAppDetails,
                                 onHideApp = viewModel::hideApp,
-                                onUninstallApp = viewModel::uninstallApp
+                                onUninstallApp = viewModel::uninstallApp,
+                                onSetDefaultLauncher = { viewModel.requestDefaultLauncher(this@MainActivity) }
                             )
                         }
                         Screen.SETTINGS -> {
                             SettingsScreen(
                                 uiState = uiState,
                                 onBack = { viewModel.navigateTo(Screen.HOME) },
+                                onSetDefaultLauncher = { viewModel.requestDefaultLauncher(this@MainActivity) },
                                 onToggleSearchBar = viewModel::toggleSearchBar,
                                 onToggleDate = viewModel::toggleDate,
                                 onToggleClock = viewModel::toggleClock,
@@ -94,5 +99,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshDefaultLauncherStatus()
     }
 }

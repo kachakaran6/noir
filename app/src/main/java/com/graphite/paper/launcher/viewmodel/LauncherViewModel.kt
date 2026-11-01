@@ -1,6 +1,8 @@
 package com.graphite.paper.launcher.viewmodel
 
+import android.app.Activity
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.graphite.paper.launcher.data.AppRepository
@@ -11,6 +13,8 @@ import com.graphite.paper.launcher.model.IconShape
 import com.graphite.paper.launcher.model.LauncherSettings
 import com.graphite.paper.launcher.model.SortOrder
 import com.graphite.paper.launcher.model.ThemeMode
+import com.graphite.paper.launcher.util.DefaultLauncherManager
+import com.graphite.paper.launcher.util.DefaultLauncherStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,26 +39,41 @@ data class LauncherUiState(
     val searchQuery: String = "",
     val currentScreen: Screen = Screen.HOME,
     val selectedAppForMenu: AppInfo? = null,
+    val defaultLauncherStatus: DefaultLauncherStatus = DefaultLauncherStatus(),
     val hasUsageStatsAccess: Boolean = false,
     val isLoading: Boolean = true
+)
+
+private data class StateBundle(
+    val rawApps: List<AppInfo>,
+    val settings: LauncherSettings,
+    val query: String,
+    val screen: Screen
 )
 
 class LauncherViewModel(application: Application) : AndroidViewModel(application) {
 
     private val appRepository = AppRepository(application)
     private val settingsRepository = SettingsRepository(application)
+    private val defaultLauncherManager = DefaultLauncherManager(application)
 
     private val searchQuery = MutableStateFlow("")
     private val currentScreen = MutableStateFlow(Screen.HOME)
     private val selectedAppForMenu = MutableStateFlow<AppInfo?>(null)
+    private val defaultLauncherStatus = MutableStateFlow(defaultLauncherManager.checkDefaultLauncherStatus())
 
     val uiState: StateFlow<LauncherUiState> = combine(
-        appRepository.getInstalledAppsFlow(),
-        settingsRepository.settingsFlow,
-        searchQuery,
-        currentScreen,
-        selectedAppForMenu
-    ) { rawApps, settings, query, screen, menuApp ->
+        combine(
+            appRepository.getInstalledAppsFlow(),
+            settingsRepository.settingsFlow,
+            searchQuery,
+            currentScreen
+        ) { rawApps, settings, query, screen ->
+            StateBundle(rawApps, settings, query, screen)
+        },
+        selectedAppForMenu,
+        defaultLauncherStatus
+    ) { (rawApps, settings, query, screen), menuApp, defaultStatus ->
         val trimmedQuery = query.trim().lowercase()
 
         // Filter out hidden packages for the main list
@@ -109,6 +128,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
             searchQuery = query,
             currentScreen = screen,
             selectedAppForMenu = menuApp,
+            defaultLauncherStatus = defaultStatus,
             hasUsageStatsAccess = hasUsageAccess,
             isLoading = false
         )
@@ -117,6 +137,18 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = LauncherUiState()
     )
+
+    fun refreshDefaultLauncherStatus() {
+        defaultLauncherStatus.value = defaultLauncherManager.checkDefaultLauncherStatus()
+    }
+
+    fun requestDefaultLauncher(activity: Activity) {
+        defaultLauncherManager.requestDefaultLauncher(activity)
+    }
+
+    fun openDefaultLauncherSettings() {
+        defaultLauncherManager.openDefaultLauncherSettings(getApplication())
+    }
 
     fun onSearchQueryChange(newQuery: String) {
         searchQuery.value = newQuery

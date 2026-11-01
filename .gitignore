@@ -1,6 +1,11 @@
 *.iml
 .gradle
 /local.properties
+key.properties
+*.jks
+*.keystore
+keystore/
+release/*.apk
 /.idea/
 .DS_Store
 /build
@@ -10,4 +15,9 @@ app/build/
 .externalNativeBuild
 .cxx
 local.properties
+key.properties
+*.jks
+*.keystore
+keystore/
+release/*.apk
 
