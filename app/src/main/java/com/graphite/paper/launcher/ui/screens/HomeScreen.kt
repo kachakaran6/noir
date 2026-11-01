@@ -177,7 +177,7 @@ fun HomeScreen(
                         contentPadding = PaddingValues(
                             top = 8.dp,
                             bottom = 48.dp,
-                            end = if (showAlphabetIndex) 28.dp else 0.dp
+                            end = if (showAlphabetIndex) 36.dp else 0.dp
                         ),
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -232,7 +232,7 @@ fun HomeScreen(
                         AlphabetIndex(
                             activeLetter = activeLetter,
                             availableLetters = uiState.availableLetters,
-                            onLetterSelected = { selectedLetter ->
+                            onLetterSelected = { selectedLetter, isDragging ->
                                 val target = letterToIndexMap[selectedLetter]
                                     ?: run {
                                         // Fallback to closest available letter
@@ -242,7 +242,11 @@ fun HomeScreen(
                                     }
                                 if (target != null) {
                                     coroutineScope.launch {
-                                        listState.scrollToItem(target)
+                                        if (isDragging) {
+                                            listState.scrollToItem(target)
+                                        } else {
+                                            listState.animateScrollToItem(target)
+                                        }
                                     }
                                 }
                             },
