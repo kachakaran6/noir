@@ -13,8 +13,11 @@ import com.samyukt.noir.model.IconShape
 import com.samyukt.noir.model.LauncherSettings
 import com.samyukt.noir.model.SortOrder
 import com.samyukt.noir.model.ThemeMode
+import com.samyukt.noir.ui.components.NoirIconEngine
 import com.samyukt.noir.util.DefaultLauncherManager
 import com.samyukt.noir.util.DefaultLauncherStatus
+import com.samyukt.noir.util.DeviceCompatibilityInfo
+import com.samyukt.noir.util.DeviceCompatibilityManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +29,8 @@ enum class Screen {
     HOME,
     SETTINGS,
     ICON_CUSTOMIZATION,
-    HIDDEN_APPS
+    HIDDEN_APPS,
+    DEVICE_COMPATIBILITY
 }
 
 data class LauncherUiState(
@@ -40,6 +44,7 @@ data class LauncherUiState(
     val currentScreen: Screen = Screen.HOME,
     val selectedAppForMenu: AppInfo? = null,
     val defaultLauncherStatus: DefaultLauncherStatus = DefaultLauncherStatus(),
+    val deviceCompatibilityInfo: DeviceCompatibilityInfo? = null,
     val hasUsageStatsAccess: Boolean = false,
     val isLoading: Boolean = true
 )
@@ -56,6 +61,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     private val appRepository = AppRepository(application)
     private val settingsRepository = SettingsRepository(application)
     private val defaultLauncherManager = DefaultLauncherManager(application)
+    private val deviceCompatibilityManager = DeviceCompatibilityManager(application)
 
     private val searchQuery = MutableStateFlow("")
     private val currentScreen = MutableStateFlow(Screen.HOME)
@@ -117,6 +123,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
         }
 
         val hasUsageAccess = appRepository.hasUsageStatsPermission()
+        val compatibilityInfo = deviceCompatibilityManager.getCompatibilityInfo(defaultStatus.isDefault)
 
         LauncherUiState(
             apps = sortedApps,
@@ -129,6 +136,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
             currentScreen = screen,
             selectedAppForMenu = menuApp,
             defaultLauncherStatus = defaultStatus,
+            deviceCompatibilityInfo = compatibilityInfo,
             hasUsageStatsAccess = hasUsageAccess,
             isLoading = false
         )
@@ -148,6 +156,10 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
 
     fun openDefaultLauncherSettings() {
         defaultLauncherManager.openDefaultLauncherSettings(getApplication())
+    }
+
+    fun openNavigationSettings(): Boolean {
+        return deviceCompatibilityManager.openNavigationSettings()
     }
 
     fun onSearchQueryChange(newQuery: String) {
@@ -203,14 +215,17 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun setIconShape(shape: IconShape) {
+        NoirIconEngine.clearCache()
         viewModelScope.launch { settingsRepository.setIconShape(shape) }
     }
 
     fun setIconColorMode(mode: IconColorMode) {
+        NoirIconEngine.clearCache()
         viewModelScope.launch { settingsRepository.setIconColorMode(mode) }
     }
 
     fun setCustomIconTint(tint: Long) {
+        NoirIconEngine.clearCache()
         viewModelScope.launch { settingsRepository.setCustomIconTint(tint) }
     }
 

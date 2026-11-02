@@ -64,13 +64,14 @@ fun AppListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (showIcons) {
-            IconRenderer(
-                iconBitmap = app.iconBitmap,
+            NoirAppIcon(
+                packageName = app.packageName,
                 label = app.label,
                 iconSizeDp = iconSizeDp,
                 iconShape = iconShape,
                 iconColorMode = iconColorMode,
-                customTint = customTint
+                customTint = customTint,
+                fallbackBitmap = app.iconBitmap
             )
             Spacer(modifier = Modifier.width(16.dp))
         }

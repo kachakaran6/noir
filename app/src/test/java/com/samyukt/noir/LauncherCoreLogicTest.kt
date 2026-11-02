@@ -130,5 +130,40 @@ class LauncherCoreLogicTest {
         assertTrue(modes.contains(IconColorMode.THEME_MATCHED))
         assertTrue(modes.contains(IconColorMode.CUSTOM_COLORS))
     }
+
+    @Test
+    fun testDeviceCompatibility_PocoDetectionLogic() {
+        fun isRestricted(mfg: String, brand: String, model: String): Boolean {
+            val isXiaomi = mfg.contains("Xiaomi", ignoreCase = true) || brand.contains("Xiaomi", ignoreCase = true)
+            val isPoco = brand.contains("POCO", ignoreCase = true) || model.contains("POCO", ignoreCase = true)
+            val isRedmi = brand.contains("Redmi", ignoreCase = true)
+            return isXiaomi || isPoco || isRedmi
+        }
+
+        assertTrue(isRestricted("Xiaomi", "POCO", "23049PCD8G"))
+        assertTrue(isRestricted("Xiaomi", "Redmi", "Redmi Note 12"))
+        assertTrue(isRestricted("Xiaomi", "Xiaomi", "Xiaomi 13 Pro"))
+        assertFalse(isRestricted("Google", "google", "Pixel 8"))
+        assertFalse(isRestricted("Motorola", "motorola", "Edge 40"))
+    }
+
+    @Test
+    fun testIconEngineKey_ShapeDistinction() {
+        val keyCircle = com.samyukt.noir.ui.components.IconRenderKey(
+            packageName = "com.spotify.music",
+            iconShape = IconShape.CIRCLE,
+            iconColorMode = IconColorMode.ORIGINAL_COLORS,
+            customTint = 0L,
+            sizePx = 96,
+            isDark = false
+        )
+        val keySquare = keyCircle.copy(iconShape = IconShape.SQUARE)
+        val keySquircle = keyCircle.copy(iconShape = IconShape.SQUIRCLE)
+        val keyThemeMatched = keyCircle.copy(iconColorMode = IconColorMode.THEME_MATCHED)
+
+        assertFalse(keyCircle == keySquare)
+        assertFalse(keyCircle == keySquircle)
+        assertFalse(keyCircle == keyThemeMatched)
+    }
 }
 

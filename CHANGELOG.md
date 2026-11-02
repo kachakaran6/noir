@@ -5,6 +5,20 @@ All notable changes to the NOIR Launcher project will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-11-02
+
+### Added
+- **Xiaomi & POCO Device Compatibility Layer**: Multi-property OEM detection covering manufacturer (`Xiaomi`), device branding (`POCO`, `Redmi`), system properties (`ro.mi.os.version.name` for HyperOS, `ro.miui.ui.version.name` for MIUI), and active navigation mode (`Settings.Global.force_fsg_nav_bar`).
+- **Device Compatibility Diagnostics Screen**: Dedicated `Settings → Device Compatibility` screen displaying real-time platform telemetry, default launcher status, and compatibility analysis.
+- **POCO / Xiaomi Gesture Navigation Guidance**: Transparent explanation of manufacturer-level third-party launcher full-screen gesture blocks with direct "Open Navigation Settings" intent launcher and manual fallback steps.
+- **Centralized `NoirAppIcon` Engine**: Re-engineered complete icon rendering pipeline with layer unpacking for `AdaptiveIconDrawable` (full-bleed background, centered foreground, and Android 13+ `monochrome` layer).
+- **Universal Legacy Icon Shaping**: Legacy non-adaptive bitmaps are wrapped in mathematically shaped surface plates to guarantee consistent geometry across all 5 supported shapes without distortion.
+- **Multi-Property In-Memory LRU Cache**: Implemented high-performance caching keyed by package, shape, color mode, tint, size, and theme mode with instant cache invalidation upon user selection.
+
+### Changed
+- **Immediate Live Icon Shape Updates**: Resolved root cause where pre-baked OEM-masked bitmaps prevented shape changes; icon shape selections now apply instantaneously across the home screen, context menu, and settings previews.
+- **Back Navigation Coverage**: Scoped `BackHandler` integration for `Screen.DEVICE_COMPATIBILITY`.
+
 ## [0.1.1] - 2026-11-02
 
 ### Added

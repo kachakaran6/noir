@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.samyukt.noir.ui.screens.DeviceCompatibilityScreen
 import com.samyukt.noir.ui.screens.HiddenAppsScreen
 import com.samyukt.noir.ui.screens.HomeScreen
 import com.samyukt.noir.ui.screens.IconCustomizationScreen
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
                 when {
                     uiState.selectedAppForMenu != null -> viewModel.selectAppForMenu(null)
                     uiState.searchQuery.isNotEmpty() -> viewModel.onSearchQueryChange("")
+                    uiState.currentScreen == Screen.DEVICE_COMPATIBILITY -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.ICON_CUSTOMIZATION -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.HIDDEN_APPS -> viewModel.navigateTo(Screen.SETTINGS)
                     uiState.currentScreen == Screen.SETTINGS -> viewModel.navigateTo(Screen.HOME)
@@ -65,6 +67,7 @@ class MainActivity : ComponentActivity() {
                                 uiState = uiState,
                                 onBack = { viewModel.navigateTo(Screen.HOME) },
                                 onSetDefaultLauncher = { viewModel.requestDefaultLauncher(this@MainActivity) },
+                                onOpenDeviceCompatibility = { viewModel.navigateTo(Screen.DEVICE_COMPATIBILITY) },
                                 onToggleSearchBar = viewModel::toggleSearchBar,
                                 onToggleDate = viewModel::toggleDate,
                                 onToggleClock = viewModel::toggleClock,
@@ -79,6 +82,16 @@ class MainActivity : ComponentActivity() {
                                 onOpenHiddenApps = { viewModel.navigateTo(Screen.HIDDEN_APPS) },
                                 onResetDefaults = viewModel::resetDefaults
                             )
+                        }
+                        Screen.DEVICE_COMPATIBILITY -> {
+                            uiState.deviceCompatibilityInfo?.let { info ->
+                                DeviceCompatibilityScreen(
+                                    compatibilityInfo = info,
+                                    onBack = { viewModel.navigateTo(Screen.SETTINGS) },
+                                    onOpenNavigationSettings = { viewModel.openNavigationSettings() },
+                                    subtlePaperGrain = uiState.settings.subtlePaperGrain
+                                )
+                            }
                         }
                         Screen.ICON_CUSTOMIZATION -> {
                             IconCustomizationScreen(

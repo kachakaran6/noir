@@ -41,6 +41,7 @@ import com.samyukt.noir.model.CuratedTint
 import com.samyukt.noir.model.IconColorMode
 import com.samyukt.noir.model.IconShape
 import com.samyukt.noir.ui.components.IconRenderer
+import com.samyukt.noir.ui.components.NoirAppIcon
 import com.samyukt.noir.ui.components.PaperSurface
 import com.samyukt.noir.ui.components.SquircleShape
 import com.samyukt.noir.ui.theme.EditorialSerif
@@ -143,13 +144,14 @@ fun IconCustomizationScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier.width(68.dp)
                             ) {
-                                IconRenderer(
-                                    iconBitmap = app.iconBitmap,
+                                NoirAppIcon(
+                                    packageName = app.packageName,
                                     label = app.label,
                                     iconSizeDp = uiState.settings.iconSizeDp,
                                     iconShape = uiState.settings.iconShape,
                                     iconColorMode = uiState.settings.iconColorMode,
-                                    customTint = uiState.settings.customIconTint
+                                    customTint = uiState.settings.customIconTint,
+                                    fallbackBitmap = app.iconBitmap
                                 )
                                 Spacer(modifier = Modifier.height(6.dp))
                                 Text(

@@ -71,13 +71,14 @@ fun AppContextMenu(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconRenderer(
-                    iconBitmap = app.iconBitmap,
+                NoirAppIcon(
+                    packageName = app.packageName,
                     label = app.label,
                     iconSizeDp = 44,
                     iconShape = iconShape,
                     iconColorMode = iconColorMode,
-                    customTint = customTint
+                    customTint = customTint,
+                    fallbackBitmap = app.iconBitmap
                 )
                 Spacer(modifier = Modifier.width(16.dp))
 

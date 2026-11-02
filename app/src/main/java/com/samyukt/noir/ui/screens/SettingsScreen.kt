@@ -23,9 +23,11 @@ import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
@@ -51,6 +53,7 @@ fun SettingsScreen(
     uiState: LauncherUiState,
     onBack: () -> Unit,
     onSetDefaultLauncher: () -> Unit,
+    onOpenDeviceCompatibility: () -> Unit,
     onToggleSearchBar: (Boolean) -> Unit,
     onToggleDate: (Boolean) -> Unit,
     onToggleClock: (Boolean) -> Unit,
@@ -190,6 +193,67 @@ fun SettingsScreen(
                             )
                         )
                     }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Device Compatibility Card
+                val compatInfo = uiState.deviceCompatibilityInfo
+                val isRestricted = compatInfo?.status == com.samyukt.noir.util.CompatibilityStatus.SYSTEM_RESTRICTED
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(3.dp))
+                        .background(colors.surface)
+                        .clickable(onClick = onOpenDeviceCompatibility)
+                        .padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = if (isRestricted) Icons.Outlined.WarningAmber else Icons.Outlined.PhoneAndroid,
+                        contentDescription = null,
+                        tint = colors.primaryText,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Device Compatibility",
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontFamily = SwissSans,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 13.sp,
+                                color = colors.primaryText
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = if (isRestricted) {
+                                "${compatInfo.brand} ${compatInfo.model} — System gesture restrictions detected"
+                            } else {
+                                "${compatInfo?.brand ?: "Device"} platform & navigation compatibility status"
+                            },
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontFamily = SwissSans,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 11.sp,
+                                color = colors.mutedText,
+                                lineHeight = 15.sp
+                            )
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "VIEW ›",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontFamily = SwissSans,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 11.sp,
+                            letterSpacing = 1.0.sp,
+                            color = colors.secondaryText
+                        )
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
